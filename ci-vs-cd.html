@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 8 — Bảng So sánh CI (Bài 7) vs CD (Bài 8)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 36px 48px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #334155;
+      padding-bottom: 18px;
+      margin-bottom: 26px;
+    }
+    .header h1 { font-size: 24px; color: #38bdf8; }
+    .header p { font-size: 14px; color: #94a3b8; margin-top: 4px; }
+    .badge {
+      background: #1e293b;
+      border: 1px solid #475569;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #e2e8f0;
+      text-align: right;
+    }
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 16px 24px;
+      margin-bottom: 26px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .step-ci { background: #0369a1; padding: 8px 14px; border-radius: 6px; color: #fff; }
+    .step-cd { background: #047857; padding: 8px 14px; border-radius: 6px; color: #fff; }
+    .arrow { color: #64748b; font-size: 18px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1e293b;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid #334155;
+      font-size: 14.5px;
+      line-height: 1.5;
+    }
+    th {
+      background: #0f172a;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    th:nth-child(1) { width: 20%; color: #cbd5e1; }
+    th:nth-child(2) { width: 40%; color: #38bdf8; }
+    th:nth-child(3) { width: 40%; color: #34d399; }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-weight: 700; color: #e2e8f0; background: rgba(15,23,42,0.4); }
+    code {
+      background: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #fbbf24;
+      font-family: Consolas, monospace;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>BẢNG SO SÁNH TÍCH HỢP LIÊN TỤC (CI) vs PHÁT HÀNH LIÊN TỤC (CD)</h1>
+      <p>Kết nối Pipeline Bài 7 (Continuous Integration) &rarr; Bài 8 (Continuous Delivery / Deployment)</p>
+    </div>
+    <div class="badge">
+      <strong>Lê Việt Cường</strong> — DTC235200100<br/>Lớp: KTPM K22A
+    </div>
+  </div>
+
+  <div class="flow">
+    <span class="step-ci">CI: Checkout &rarr; Build &rarr; Unit Test &rarr; SonarQube &rarr; Nexus</span>
+    <span class="arrow">&Longrightarrow;</span>
+    <span class="step-cd">CD: Docker Multi-stage Build &rarr; Scan &rarr; Push Docker Hub &rarr; Deploy &amp; Healthcheck</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tiêu chí</th>
+        <th>CI — Continuous Integration (Bài 7)</th>
+        <th>CD — Continuous Delivery / Deployment (Bài 8)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Mục đích chính</td>
+        <td>Tự động tích hợp, biên dịch, kiểm thử &amp; phân tích chất lượng mã nguồn sớm để phát hiện lỗi ngay khi commit.</td>
+        <td>Đóng gói ứng dụng thành container bất biến, đẩy lên registry và tự động triển khai tới môi trường đích / người dùng.</td>
+      </tr>
+      <tr>
+        <td>Đầu ra (Output)</td>
+        <td>Gói biên dịch <code>ci-demo-1.0.0-SNAPSHOT.jar</code> lưu trên Jenkins &amp; Nexus Repository.</td>
+        <td>Docker Image <code>vczo/devops-lab8-app</code> trên Docker Hub &amp; Container Production đang chạy thực tế.</td>
+      </tr>
+      <tr>
+        <td>Công cụ sử dụng</td>
+        <td>Git, Jenkins, Maven, JUnit 5, SonarQube, Nexus Repository OSS.</td>
+        <td>Jenkins, Docker (Multi-stage build), Docker Compose, Nginx, Redis, Docker Hub Registry.</td>
+      </tr>
+      <tr>
+        <td>Câu hỏi trả lời</td>
+        <td><em>"Code mới có biên dịch được, vượt qua test và an toàn để merge vào nhánh chính không?"</em></td>
+        <td><em>"Bản dựng này đã sẵn sàng đóng gói và triển khai ổn định trên môi trường Production chưa?"</em></td>
+      </tr>
+      <tr>
+        <td>Tần suất kích hoạt</td>
+        <td>Mỗi lần Developer thực hiện <code>git push</code> hoặc tạo Pull Request.</td>
+        <td>Ngay sau khi toàn bộ các giai đoạn CI vượt qua (Quality Gate &amp; Tests PASS).</td>
+      </tr>
+      <tr>
+        <td>Ý nghĩa khi thất bại</td>
+        <td>Mã nguồn có lỗi cú pháp, sai logic (Unit Test fail) hoặc vi phạm tiêu chuẩn chất lượng code.</td>
+        <td>Lỗi đóng gói môi trường, lỗi xác thực Registry, xung đột cổng/hạ tầng hoặc Healthcheck sau deploy thất bại.</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

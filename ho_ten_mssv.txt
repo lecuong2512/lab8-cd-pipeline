@@ -1,0 +1,24 @@
+Họ và tên: Lê Việt Cường
+MSSV: DTC235200100
+Lớp: KTPM K22A
+Môn học: Vận hành và bảo trì phần mềm (DevOps)
+Bài thực hành: Lab 8 - Phát hành Liên tục (CD) — Docker & Jenkins CD Pipeline
+GitHub Repository: https://github.com/lecuong2512/lab8-cd-pipeline
+Docker Hub Repository: https://hub.docker.com/r/vczo/devops-lab8-app
+
+Kết quả thực hiện:
+1. Docker Image (Multi-stage Build):
+   - Xây dựng Dockerfile tối ưu 2 giai đoạn (node:18-alpine), chạy dưới non-root user (appuser - UID 1001) và tích hợp HEALTHCHECK.
+   - So sánh kích thước giữa bản multi-stage (devops-lab8-app:1.0) và bản single-stage (devops-lab8-app:fat).
+2. Docker Compose (Multi-container Stack):
+   - Triển khai đồng thời 3 dịch vụ trên mạng nội bộ app-network: Nginx Reverse Proxy (:80) -> Node.js App (:3000) -> Redis Cache (:6379).
+   - Kiểm tra phản hồi JSON tại http://localhost/ và http://localhost/health qua Nginx.
+3. Docker Hub Registry:
+   - Tag và push thành công vczo/devops-lab8-app:1.0 và vczo/devops-lab8-app:latest lên Docker Hub.
+   - Giả lập pull và khởi chạy kiểm chứng thành công.
+4. Jenkins CD Pipeline (DevOps-Lab8-CD-Pipeline):
+   - Hoàn thành trọn vẹn 6 stages xanh (SUCCESS): Checkout -> Docker Build -> Docker Scan -> Push to Registry -> Deploy Container -> Verify Deploy.
+5. Kết nối CI (Bài 7) + CD (Bài 8):
+   - Hoàn thành bảng phân tích so sánh CI vs CD và pipeline kết hợp CI+CD.
+6. Dọn dẹp môi trường:
+   - Thực thi docker compose down và dọn sạch các container thử nghiệm theo đúng quy trình.
